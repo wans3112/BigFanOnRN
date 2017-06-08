@@ -16,6 +16,7 @@
  import { screen } from '../../common'
 
  import { CachedImage } from "react-native-img-cache";
+ import WSorage from '../../sorage/WSorage'
 
  class TopicListController extends Component {
 

@@ -42,8 +42,6 @@ import { AsyncStorage } from 'react-native';
 
 import { CachedImage } from "react-native-img-cache";
 
-var storage;
-
 class HomeScreen extends Component {
 
   static navigationOptions = {
@@ -66,8 +64,7 @@ class HomeScreen extends Component {
   constructor(props: Object) {
     super(props)
 
-    console.log("props>> ", this.props)
-    storage = WSorage._getStorage();
+    WSorage._getStorage();
 
     let { menuInfos, onMenuSelected } = this.props
 
