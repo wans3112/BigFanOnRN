@@ -16,7 +16,7 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 class BlankView extends Component {
     render() {
         return (
-            <View style={styles.container}>
+            <View style={[styles.container,this.props.blankstyle]}>
             </View>
         );
     }

@@ -11,6 +11,7 @@
  import NavigationItem from '../NavigationItem'
  import RefreshListView from '../widget/RefreshListView'
  import RefreshState from '../widget/RefreshState'
+ import BlankView from '../widget/BlankView'
  import api from '../api'
 
  import { screen } from '../../common'
@@ -28,6 +29,8 @@
 
    constructor(props: Object) {
        super(props)
+
+       WSorage._getStorage();
 
        let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
@@ -61,25 +64,25 @@
               }}
           />
       ),
-      // header: (
-        // <NavigationItem
-        //     iconStyle={{marginLeft:12}}
-        //     icon={require('../../img/navi_icon_map.png')}
-        //     onPress={() => {
-        //       alert('地图')
-        //     }}
-        // />
-      // )
      }
    }
 
    componentDidMount() {
        this.refs.listView.startHeaderRefreshing()
+
+       WSorage._load('staduimlist', (json) => {
+         console.log("缓存 staduimlist >> ",json)
+         this.doFetchData(json, true, 0)
+       })
    }
 
   render () {
      return (
        <View style={styles.container}>
+           <View style={{flexDirection:'row',height:50,backgroundColor:'white'}}>
+             {this.renderHeader()}
+           </View>
+           <BlankView blankstyle={{backgroundColor:'#00000000'}}/>
            <RefreshListView
                ref = 'listView'
                dataSource={this.state.dataSource}
@@ -91,6 +94,22 @@
            />
        </View>
      )
+   }
+
+   renderHeader() {
+     let items = []
+     let titles = ['深圳', '羽毛球', '智能排序', '日期']
+     for (var i = 0; i < 4; i++) {
+       items.push(
+          <View key={i} style={{flex:1,alignItems:'center',justifyContent:'center'}} >
+            <View style={{flexDirection:'row'}}>
+              <Text>{titles[i]}</Text>
+              <Image style={{height:10,width:10,marginLeft:5,marginTop:2}} source={require('../../img/icon_back_black_down.png')} resizeMode='contain'/>
+            </View>
+          </View>
+       )
+     }
+     return items
    }
 
    onScroll(e: any) {
@@ -130,31 +149,36 @@
            .then((response) => response.json())
            .then((json) => {
                console.log(json);
-               setTimeout(() => {
-                   let items = json.data.items;
-
-                   let dataList = isReload ? items : [...this.state.dataList, ...items]
-
-                   this.setState({
-                       page: page,
-                       dataList: dataList,
-                       dataSource: this.state.dataSource.cloneWithRows(dataList)
-                   })
-
-                   let footerState = RefreshState.Idle
-                    console.log('...data--->>',items)
-                   //测试加载全部数据的情况
-                   if (items.length < 10 ) {
-                       footerState = RefreshState.NoMoreData
-                   }
-
-                   this.refs.listView.endRefreshing(footerState)
-               }, 1000);
+               this.doFetchData(json, isReload, page)
 
            })
            .catch((error) => {
                alert(error)
            })
+   }
+
+   doFetchData (json:Object,isReload:boolean,page:number) {
+     setTimeout(() => {
+         WSorage._sava('staduimlist', json)
+         let items = json.data.items;
+
+         let dataList = isReload ? items : [...this.state.dataList, ...items]
+
+         this.setState({
+             page: page,
+             dataList: dataList,
+             dataSource: this.state.dataSource.cloneWithRows(dataList)
+         })
+
+         let footerState = RefreshState.Idle
+          console.log('...data--->>',items)
+         //测试加载全部数据的情况
+         if (items.length < 10 ) {
+             footerState = RefreshState.NoMoreData
+         }
+
+         this.refs.listView.endRefreshing(footerState)
+     }, 1000);
    }
 
    renderRow(model:Object){
