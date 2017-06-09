@@ -111,7 +111,7 @@ class DiscoverController extends Component {
         })
   }
 
-  doFetchData(json) {
+  doFetchData(json:Object) {
     console.log("doFetchData >> ",json)
 
     let bannersData = json.data.videoLayout.data.map(
@@ -190,7 +190,7 @@ class DiscoverController extends Component {
   }
 
   // 每一行中的数据
-  renderRow(rowData, sectionID){
+  renderRow(rowData:number, sectionID:number){
       return (
         <View>
            { sectionID == 0
@@ -223,7 +223,7 @@ class DiscoverController extends Component {
   }
 
   // 每一组对应的数据
-  renderSectionHeader(sectionData,sectionId){
+  renderSectionHeader(sectionData:number,sectionId:number){
       return (
         <View >
           {

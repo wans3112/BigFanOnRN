@@ -6,6 +6,8 @@ export default {
 
   TopicListApi: 'https://test.quncaotech.com/api/user/dynamic/getForwardTopicList',
 
+  StadiumListApi: 'https://test.quncaotech.com/api/place/placeSearch',
+
   menuInfo: [
           { title: '达人', icon: require('../../src/img/find_icon_doyen.png') },
           { title: '俱乐部', icon: require('../../src/img/find_icon_club.png') },

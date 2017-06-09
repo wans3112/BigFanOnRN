@@ -10,37 +10,36 @@ import {
   StyleSheet,
   ListView,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  Platform
 } from 'react-native';
 import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation';
+import CardStackStyleInterpolator from 'react-navigation/src/views/CardStackStyleInterpolator';
+import Swiper from 'react-native-swiper';
+import { StatusBar } from 'react-native';
+import { AsyncStorage } from 'react-native';
+import { CachedImage } from "react-native-img-cache";
+import { Container, Navbar } from 'navbar-native';
+
 import NavigationItem from './src/code/NavigationItem'
 import TabBarItem from './src/code/widget/TabBarItem'
-import CardStackStyleInterpolator from 'react-navigation/src/views/CardStackStyleInterpolator';
-
-import { StatusBar } from 'react-native';
 
 import api from './src/code/api'
 import { screen } from './src/common'
+import WSorage from './src/sorage/WSorage'
 
-import Swiper from 'react-native-swiper';
 import RefreshListView from './src/code/widget/RefreshListView'
 import RefreshState from './src/code/widget/RefreshState'
 import HomeMenuItem from './src/code/widget/HomeMenuItem'
 import TitleBar from './src/code/widget/TitleBar'
 import BlankView from './src/code/widget/BlankView'
-
 import TopticCell from './src/code/cell/TopticCell'
 import DynamicCell from './src/code/cell/DynamicCell'
 import VideoCell from './src/code/cell/VideoCell'
 
 import WWebViewController from './src/code/controller/WWebViewController'
 import TopicListController from './src/code/controller/TopicListController'
-
-import WSorage from './src/sorage/WSorage'
-
-import { AsyncStorage } from 'react-native';
-
-import { CachedImage } from "react-native-img-cache";
+import StadiumController from './src/code/controller/StadiumController'
 
 class HomeScreen extends Component {
 
@@ -54,12 +53,14 @@ class HomeScreen extends Component {
             }}
         />
     ),
-    headerLeft:(<View />)
+    headerLeft:(<View />),
+    // header:null
   }
 
   state: {
       dataSource: ListView.DataSource,
       banners: Array<Object>,
+      naviOpacity:number
   }
   constructor(props: Object) {
     super(props)
@@ -83,7 +84,8 @@ class HomeScreen extends Component {
                getRowData: getRowData, // 获取行中的数据
                rowHasChanged: (r1, r2) => r1 !== r2,
                sectionHeaderHasChanged:(s1, s2) => s1 !== s2
-           })
+           }),
+        naviOpacity:0
      }
   }
 
@@ -247,6 +249,16 @@ class HomeScreen extends Component {
 
     return (
       <View style={styles.container}>
+        {/* <View style={{opacity:this.state.naviOpacity, width:screen.width, height:64, position:'absolute',zIndex:99,backgroundColor:'#fff',shadowColor: 'black',
+        shadowOpacity: 0.1,}} >
+          <View style={{flexDirection: 'row', height:43.5, marginTop:20}}>
+            <Text style={{color:'rgba(0, 0, 0, .9)',left:70,right:70,position:'absolute', top:10,bottom:0,alignItems:'center', fontSize: Platform.OS === 'ios' ? 17 : 18, textAlign:'center',flex:1,fontWeight: Platform.OS === 'ios' ? '600' : '500'}}>发现</Text>
+            <Image source={require('././src/img/icon_news.png')} resizeMode='contain' style={{margin:5,position:'absolute',right: 10,
+            bottom: 0,
+            top: 5,}} />
+          </View>
+          <View style={{height:0.5,backgroundColor:'#e8e8e8'}}/>
+        </View> */}
         <RefreshListView
             ref = 'listView'
             dataSource = {this.state.dataSource}
@@ -255,9 +267,23 @@ class HomeScreen extends Component {
             onHeaderRefresh = {() => this.requestData()}
             removeClippedSubviews = {false}
             stickySectionHeadersEnabled = {false}
+            onScroll={(e) => this.onScroll(e)}
         />
+
       </View>
     );
+  }
+
+  onScroll(e: any) {
+    let offsetY = e.nativeEvent.contentOffset.y;
+    offsetY = offsetY > 64 ? 64 : offsetY
+    offsetY = offsetY < 0 ? 0 : offsetY
+
+    this.setState({
+      naviOpacity: offsetY / 64
+    })
+    console.log('offset x :',this.state.naviOpacity,screen.height)
+
   }
 
   renderBanners() {
@@ -322,7 +348,7 @@ const TabController = TabNavigator(
             }),
         },
         Stadium: {
-            screen: TestScreen,
+            screen: StadiumController,
             navigationOptions: ({ navigation }) => ({
                 tabBarLabel: '场馆',
                 title: '场馆',
@@ -384,7 +410,7 @@ const TabController = TabNavigator(
         },
     },
     {
-        initialRouteName: 'Discover',
+        initialRouteName: 'Stadium',
         tabBarComponent: TabBarBottom,
         tabBarPosition: 'bottom',
         swipeEnabled: false,
@@ -392,7 +418,7 @@ const TabController = TabNavigator(
         lazy: true,
         tabBarOptions: {
             style: { height:49 },
-            activeTintColor: 'red',
+            activeTintColor: '#ed4d4d',
             inactiveTintColor: '#979797',
             style: { backgroundColor: '#ffffff' },
         },
@@ -444,7 +470,7 @@ const Navigator = StackNavigator(
 // define your styles
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1,//
         backgroundColor: '#f6f6f6',
         width:screen.width,
         height:screen.height
