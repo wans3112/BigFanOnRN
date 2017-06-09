@@ -104,8 +104,9 @@
           <View key={i} style={{flex:1,alignItems:'center',justifyContent:'center'}} >
             <View style={{flexDirection:'row'}}>
               <Text>{titles[i]}</Text>
-              <Image style={{height:10,width:10,marginLeft:5,marginTop:2}} source={require('../../img/icon_back_black_down.png')} resizeMode='contain'/>
+              <Image style={{height:10,width:10,marginLeft:5,marginTop:4}} source={require('../../img/icon_back_black_down.png')} resizeMode='contain'/>
             </View>
+            <View style={{backgroundColor:'#b5b4b9',height:20,width:0.5,position:'absolute',top:15,bottom:15,right:0}}/>
           </View>
        )
      }
