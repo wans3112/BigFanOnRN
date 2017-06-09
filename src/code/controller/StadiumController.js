@@ -11,6 +11,7 @@
  import NavigationItem from '../NavigationItem'
  import RefreshListView from '../widget/RefreshListView'
  import RefreshState from '../widget/RefreshState'
+ import WBButton from '../widget/WBButton'
  import BlankView from '../widget/BlankView'
  import api from '../api'
 
@@ -103,10 +104,10 @@
        items.push(
           <View key={i} style={{flex:1,alignItems:'center',justifyContent:'center'}} >
             <View style={{flexDirection:'row'}}>
-              <Text>{titles[i]}</Text>
-              <Image style={{height:10,width:10,marginLeft:5,marginTop:4}} source={require('../../img/icon_back_black_down.png')} resizeMode='contain'/>
+              <WBButton title={titles[i]} highlightcolor='#ed4d4d' />
+              <Image style={{height:10,width:10,marginLeft:5,marginTop:3}} source={i==3?require('../../img/icon_screen_gray.png'):require('../../img/icon_back_black_down.png')} resizeMode='contain'/>
             </View>
-            <View style={{backgroundColor:'#b5b4b9',height:20,width:0.5,position:'absolute',top:15,bottom:15,right:0}}/>
+            <Image source={require('../../img/icon_line.png')} resizeMode='contain' style={{backgroundColor:'#b5b4b9',width:1,position:'absolute',right:0}}/>
           </View>
        )
      }
