@@ -40,6 +40,7 @@ import VideoCell from './src/code/cell/VideoCell'
 import WWebViewController from './src/code/controller/WWebViewController'
 import TopicListController from './src/code/controller/TopicListController'
 import StadiumController from './src/code/controller/StadiumController'
+import MineController from './src/code/controller/MineController'
 
 class HomeScreen extends Component {
 
@@ -95,7 +96,7 @@ class HomeScreen extends Component {
       console.log("缓存 >> ",json)
       this.doFetchData(json)
     })
-    // this.refs.listView.startHeaderRefreshing()
+    this.refs.listView.startHeaderRefreshing()
   }
 
   requestData() {
@@ -385,7 +386,7 @@ const TabController = TabNavigator(
             }),
         },
         Mine: {
-            screen: TestScreen,
+            screen: MineController,
             navigationOptions: ({ navigation }) => ({
                 tabBarLabel: '我的',
                 tabBarIcon: ({ focused, tintColor }) => (
@@ -410,7 +411,7 @@ const TabController = TabNavigator(
         },
     },
     {
-        initialRouteName: 'Stadium',
+        initialRouteName: 'Mine',
         tabBarComponent: TabBarBottom,
         tabBarPosition: 'bottom',
         swipeEnabled: false,

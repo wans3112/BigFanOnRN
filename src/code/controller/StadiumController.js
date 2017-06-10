@@ -80,10 +80,12 @@
   render () {
      return (
        <View style={styles.container}>
-           <View style={{flexDirection:'row',height:50,backgroundColor:'white'}}>
-             {this.renderHeader()}
+           <View>
+             <View style={{flexDirection:'row',height:50,backgroundColor:'white'}}>
+               {this.renderHeader()}
+             </View>
+             <BlankView blankstyle={{backgroundColor:'#00000000'}}/>
            </View>
-           <BlankView blankstyle={{backgroundColor:'#00000000'}}/>
            <RefreshListView
                ref = 'listView'
                dataSource={this.state.dataSource}
@@ -92,6 +94,7 @@
                onFooterRefresh={() => this.requestData(false)}
                renderSeparator={this.renderSeparator}
                onScroll={(e) => this.onScroll(e)}
+               removeClippedSubviews={false}
            />
        </View>
      )

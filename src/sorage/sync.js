@@ -61,7 +61,7 @@ SYNC.toplist =(params)=>{
              })
           }).then(response => response.json())
             .then(json => {
-                console.log(json.data);
+                console.log('最新：',json.data);
                 if(json){
                   storage.save({
                     'toplist': json
@@ -84,4 +84,46 @@ SYNC.toplist =(params)=>{
           });
 }
 
+SYNC.staduimlist =(params)=>{
+  let { id, resolve, reject, syncParams: { extraFetchOptions, someFlag } } = params;
+
+  fetch(api.StadiumListApi,{
+           method: 'post',
+           headers: {
+               'Accept': 'application/json',
+               'Content-Type': 'application/json' //记得加上这行，不然bodyParser.json() 会识别不了
+           },
+           body: JSON.stringify({
+               "categoryId":3,
+               "sortType":extraFetchOptions.page,
+               "pageNum":0,
+               "isSign":1,
+               "searchType":2,
+               "protocol_ver":1,
+               "isShelves":1,
+               "lat":22.55532308717054,
+               "ver":"3.0",
+               "platformType":1,
+               "isFirst":0,
+               "larkAppId":1,
+               "lng":113.9738262765926,
+               "cityId":6,
+               "pageSize":10
+
+           })})
+      .then((response) => response.json())
+      .then((json) => {
+        console.log('最新：',json.data);
+          if (someFlag) {
+            // 根据syncParams中的额外参数做对应处理
+          }
+
+          // 成功则调用resolve
+          resolve && resolve(json);
+      })
+      .catch((error) => {
+        console.warn(err);
+        reject && reject(err);
+      })
+}
 export default SYNC
