@@ -164,21 +164,25 @@
 
    doFetchData (json:Object,isReload:boolean,page:number) {
      setTimeout(() => {
-         WSorage._sava('staduimlist', json)
-         let items = json.data.items;
+         console.log("stadium :", json)
+         let items
+         if ( json.data ) {
+           WSorage._sava('staduimlist', json)
+           items = json.data.items;
 
-         let dataList = isReload ? items : [...this.state.dataList, ...items]
+           let dataList = isReload ? items : [...this.state.dataList, ...items]
 
-         this.setState({
-             page: page,
-             dataList: dataList,
-             dataSource: this.state.dataSource.cloneWithRows(dataList)
-         })
+           this.setState({
+               page: page,
+               dataList: dataList,
+               dataSource: this.state.dataSource.cloneWithRows(dataList)
+           })
+         }
 
          let footerState = RefreshState.Idle
           console.log('...data--->>',items)
          //测试加载全部数据的情况
-         if (items.length < 10 ) {
+         if (items && items.length < 10 ) {
              footerState = RefreshState.NoMoreData
          }
 

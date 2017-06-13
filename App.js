@@ -250,16 +250,6 @@ class HomeScreen extends Component {
 
     return (
       <View style={styles.container}>
-        {/* <View style={{opacity:this.state.naviOpacity, width:screen.width, height:64, position:'absolute',zIndex:99,backgroundColor:'#fff',shadowColor: 'black',
-        shadowOpacity: 0.1,}} >
-          <View style={{flexDirection: 'row', height:43.5, marginTop:20}}>
-            <Text style={{color:'rgba(0, 0, 0, .9)',left:70,right:70,position:'absolute', top:10,bottom:0,alignItems:'center', fontSize: Platform.OS === 'ios' ? 17 : 18, textAlign:'center',flex:1,fontWeight: Platform.OS === 'ios' ? '600' : '500'}}>发现</Text>
-            <Image source={require('././src/img/icon_news.png')} resizeMode='contain' style={{margin:5,position:'absolute',right: 10,
-            bottom: 0,
-            top: 5,}} />
-          </View>
-          <View style={{height:0.5,backgroundColor:'#e8e8e8'}}/>
-        </View> */}
         <RefreshListView
             ref = 'listView'
             dataSource = {this.state.dataSource}
@@ -270,7 +260,6 @@ class HomeScreen extends Component {
             stickySectionHeadersEnabled = {false}
             onScroll={(e) => this.onScroll(e)}
         />
-
       </View>
     );
   }
@@ -301,9 +290,9 @@ class HomeScreen extends Component {
         </TouchableOpacity>
       );
     }
-    // dot={<Image source = {require('././src/img/icon_dot.png')} resizeMode='contain' style={{margin:5}}/>}
-    // activeDot={<Image source = {require('././src/img/icon_dot_selected.png')} resizeMode='contain' style={{margin:5}}/>}
-    return <Swiper height={screen.width*3/7} autoplay={false}  >
+
+    return <Swiper height={screen.width*3/7} autoplay={true} autoplayTimeout={5} dot={<Image source = {require('././src/img/icon_dot.png')} style={{marginBottom:-20, marginRight:5}} />}
+    activeDot={<Image source = {require('././src/img/icon_dot_selected.png')} style={{marginBottom:-20, marginRight:5}}/>}>
               {imageViews}
            </Swiper>;
   }
