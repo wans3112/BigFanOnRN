@@ -1,7 +1,7 @@
 
 
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, ListView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, ListView, TouchableOpacity, Image, Platform } from 'react-native';
 import NavigationItem from '../NavigationItem'
 import { screen } from '../../common'
 
@@ -49,24 +49,7 @@ class MineController extends Component {
       const { params } = navigation.state
       // if ( !params )  return
       return {
-       headerRight: (
-           <NavigationItem
-               icon={require('../../img/icon_news.png')}
-               onPress={() => {
-                 alert('消息')
-               }}
-           />
-       ),
-       headerLeft: (
-           <NavigationItem
-               iconStyle={{marginLeft:12}}
-               icon={require('../../img/navi_icon_map.png')}
-               onPress={() => {
-                 alert('地图')
-               }}
-           />
-       ),
-       header:null,
+       header:null
       }
     }
 
@@ -76,7 +59,7 @@ class MineController extends Component {
       sectionIDs = [],
       rowIDs = [];
 
-      sectionIDs = [0, 1, 2];
+      sectionIDs = [0, 1, 2, 3];
 
       rowIDs[0] = [0];
       dataBlob[0+':'+0] = ['topicsData'];
@@ -95,31 +78,28 @@ class MineController extends Component {
       {title:'我的订单', subTitle:'消费记录清单', image:require('../../img/ny_icon_order.png')},
       {title:'我的资产', subTitle:'鸟蛋会员优惠', image:require('../../img/ny_icon_asset.png')}];
 
+      rowIDs[3] = [0];
+
       this.setState({
           dataSource: this.state.dataSource.cloneWithRowsAndSections(dataBlob, sectionIDs, rowIDs)
       })
     }
 
      render () {
-        return (
+       const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
+       const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;        return (
           <View style={styles.container}>
-              <View style={{backgroundColor:this.state.bgcolor,
-              position:'absolute',
-              zIndex:99,
-              width:screen.width,
-              height:64, justifyContent:'space-between',flexDirection:'row'}}>
-              <TouchableOpacity style={{justifyContent:'center',marginTop:20,height:44,width:44}}>
-                <Image style={{tintColor:'white', alignSelf:'center'}} source={require('../../img/navi_icon_set.png')} />
+              <View style={{backgroundColor:this.state.bgcolor, position:'absolute', zIndex:99, width:screen.width, height:(APPBAR_HEIGHT+STATUSBAR_HEIGHT), justifyContent:'space-between',flexDirection:'row'}}>
+              <TouchableOpacity style={{justifyContent:'center',marginTop:STATUSBAR_HEIGHT,height:APPBAR_HEIGHT,width:46}}>
+                <Image style={{tintColor:'white', alignSelf:'center', height:22, width:22}} source={require('../../img/navi_icon_set.png')} />
               </TouchableOpacity>
-              <TouchableOpacity style={{justifyContent:'center',marginTop:20,height:44,width:44}}>
-                <Image style={{tintColor:'white',alignSelf:'center'}} source={require('../../img/icon_news.png')} />
+              <TouchableOpacity style={{justifyContent:'center',marginTop:STATUSBAR_HEIGHT,height:APPBAR_HEIGHT,width:46}}>
+                <Image style={{tintColor:'white',alignSelf:'center', height:22, width:22}} source={require('../../img/icon_news.png')} />
               </TouchableOpacity>
             </View>
               <ListView
                  style={{backgroundColor:'#ffffff00', zIndex:10}}
                  ref = 'listView'
-                 contentInset={{bottom:12}}
-                //  contentOffset={{y:-200}}
                  onScroll={(e) => this.onScroll(e)}
                  renderSectionHeader = {this.renderSectionHeader.bind(this)}
                  dataSource={this.state.dataSource}
@@ -171,27 +151,31 @@ class MineController extends Component {
                 <View style={{position:'absolute',top:0,bottom:0,width:0.5,left:screen.width/2, backgroundColor:'#e8e8e8'}}/>
               </View>
 
-              :(
-                <View activeOpacity={0.6} style={{flexDirection:'row', flexWrap:'wrap', height:76*2, backgroundColor:'white'}}>
-                  {
-                    rowData.map(
-                      (info, i) => (
-                        <TouchableOpacity key={i} style={{height:76, width:screen.width/2, justifyContent:'center'}}>
-                          <View style={{flexDirection:'row', alignItems:'center'}}>
-                            <Image style={{'marginLeft':20}} source={info.image} resizeMode='contain' />
-                            <View style={{marginLeft:18,alignItems:'center'}}>
-                              <Text style={{fontSize:15, color:'#2d2d37'}}>{info.title}</Text>
-                              <Text style={{fontSize:12, color:'#b5b4b9', marginTop:5}}>{info.subTitle}</Text>
+              :(sectionID == 2 ?
+                (
+                  <View activeOpacity={0.6} style={{flexDirection:'row', flexWrap:'wrap', height:76*2, backgroundColor:'white'}}>
+                    {
+                      rowData.map(
+                        (info, i) => (
+                          <TouchableOpacity key={i} style={{height:76, width:screen.width/2, justifyContent:'center'}}>
+                            <View style={{flexDirection:'row', alignItems:'center'}}>
+                              <Image style={{'marginLeft':20}} source={info.image} resizeMode='contain' />
+                              <View style={{marginLeft:18,alignItems:'center'}}>
+                                <Text style={{fontSize:15, color:'#2d2d37'}}>{info.title}</Text>
+                                <Text style={{fontSize:12, color:'#b5b4b9', marginTop:5}}>{info.subTitle}</Text>
+                              </View>
                             </View>
-                          </View>
-                        </TouchableOpacity>
+                          </TouchableOpacity>
+                        )
                       )
-                    )
-                  }
-                  <View style={{position:'absolute',left:0,right:0,height:0.5,top:76, backgroundColor:'#e8e8e8'}}/>
-                  <View style={{position:'absolute',top:20,width:0.5, height:36, left:screen.width/2, backgroundColor:'#e8e8e8'}}/>
-                  <View style={{position:'absolute',bottom:20,width:0.5, height:36, left:screen.width/2, backgroundColor:'#e8e8e8'}}/>
-                </View>
+                    }
+                    <View style={{position:'absolute',left:0,right:0,height:0.5,top:76, backgroundColor:'#e8e8e8'}}/>
+                    <View style={{position:'absolute',top:20,width:0.5, height:36, left:screen.width/2, backgroundColor:'#e8e8e8'}}/>
+                    <View style={{position:'absolute',bottom:20,width:0.5, height:36, left:screen.width/2, backgroundColor:'#e8e8e8'}}/>
+                  </View>
+                )
+                :
+                null
               )
             )
           }
@@ -232,7 +216,6 @@ class MineController extends Component {
             }
          )
 
-        //  this.refs.listView.scrollTo({y:0})
       }else {
         color = 'rgba(255, 255, 255, ' + (offsetY)/200 + ')'
         this.setState(
@@ -245,18 +228,6 @@ class MineController extends Component {
         )
       }
     }
-
-    //
-    // renderMemberView(isMember:boolean) {
-    //   if ( isMember ) {
-    //     return <View style={{marginLeft:15+75, marginTop:20, flexDirection: 'row'}}>
-    //       <Image source={require('../../img/venue_icon_member.png')} resizeMode='contain'/>
-    //       <Text style={[styles.text,{marginLeft:6}]}>一次充值2000元送200元</Text>
-    //     </View>
-    //   }
-    //   return <View />
-    // }
-
 }
 
 const styles = StyleSheet.create({
